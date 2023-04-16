@@ -1,47 +1,78 @@
-let queue1 = [];
-let queue2 = [];
+var queues = [];
 
-function addToQueue(queueNum) {
-  let name = prompt("Enter your name:");
-  let time = prompt("Enter estimated time in minutes:");
-  let item = {name: name, time: time};
-  if (queueNum === 1) {
-    queue1.push(item);
-    updateQueue(1);
-  } else if (queueNum === 2) {
-    queue2.push(item);
-    updateQueue(2);
-  }
+function addToQueue() {
+  var queueNum = document.getElementById("queue-num").value;
+  var name = document.getElementById("name").value;
+  var age = document.getElementById("age").value;
+  var time = document.getElementById("time").value;
+
+  var queue = queues[queueNum] || (queues[queueNum] = []);
+
+  var priority = age >= 60 ? 1 : 2;
+
+  var customer = {
+    name: name,
+    age: age,
+    time: time,
+    priority: priority,
+    queueNum: queueNum,
+  };
+
+  queue.push(customer);
+
+  updateQueueDisplay();
 }
 
-function updateQueue(queueNum) {
-  let queue = queueNum === 1 ? queue1 : queue2;
-  let queueList = document.getElementById(`queue${queueNum}`);
-  queueList.innerHTML = "";
-  for (let i = 0; i < queue.length; i++) {
-    let item = queue[i];
-    let li = document.createElement("li");
-    li.innerHTML = `${item.name} - <span id="time-${queueNum}-${i}">${item.time} min</span>`;
-    queueList.appendChild(li);
-    updateTimeRemaining(queueNum, i);
-  }
-}
+function updateQueueDisplay() {
+  var queueDisplay = document.getElementById("queues");
+  queueDisplay.innerHTML = "";
 
-function updateTimeRemaining(queueNum, index) {
-  let item = queueNum === 1 ? queue1[index] : queue2[index];
-  let timeRemaining = item.time * 60;
-  let timer = setInterval(() => {
-    timeRemaining--;
-    let minutes = Math.floor(timeRemaining / 60);
-    let seconds = timeRemaining % 60;
-    let timeSpan = document.getElementById(`time-${queueNum}-${index}`);
-    timeSpan.innerHTML = `${minutes}:${seconds < 10 ? '0' + seconds : seconds} remaining`;
-    if (timeRemaining === 0) {
-      clearInterval(timer);
-      alert(`${item.name} is done!`);
-      let queue = queueNum === 1 ? queue1 : queue2;
-      queue.splice(index, 1);
-      updateQueue(queueNum);
+  for (var i = 0; i < queues.length; i++) {
+    var queue = queues[i];
+    if (queue) {
+      var queueNum = i;
+      var queueHeader = document.createElement("h3");
+      queueHeader.innerHTML = "Queue " + queueNum;
+      queueDisplay.appendChild(queueHeader);
+
+      for (var j = 0; j < queue.length; j++) {
+        var customer = queue[j];
+        var customerDiv = document.createElement("div");
+        var timeRemaining = getTimeRemaining(customer.time);
+
+        customerDiv.innerHTML =
+          "Name: " +
+          customer.name +
+          " | Age: " +
+          customer.age +
+          " | Time: " +
+          customer.time +
+          " | Time remaining: " +
+          timeRemaining;
+
+        if (customer.priority === 1) {
+          customerDiv.style.color = "red";
+        }
+
+        queueDisplay.appendChild(customerDiv);
+      }
     }
-  }, 1000);
+  }
+}
+
+function getTimeRemaining(startTime) {
+  var now = new Date();
+  var start = new Date();
+  var splitTime = startTime.split(":");
+  start.setHours(splitTime[0]);
+  start.setMinutes(splitTime[1]);
+  start.setSeconds(0);
+
+  var diff = start - now;
+  if (diff < 0) {
+    return "Expired";
+  }
+  var minutes = Math.floor((diff / 1000 / 60) % 60);
+  var seconds = Math.floor((diff / 1000) % 60);
+  return minutes + "m " + seconds + "s";
 }
