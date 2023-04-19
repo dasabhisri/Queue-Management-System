@@ -1,23 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Queue Management System</title>
-</head>
-<body>
-  <script src="scripts.js"></script>
-	<h1>Queue Management System</h1>
-	<form>
-		<label for="queue-num">Queue Number:</label>
-		<input type="number" id="queue-num" name="queue-num"><br><br>
-		<label for="name">Name:</label>
-		<input type="text" id="name" name="name"><br><br>
-		<label for="age">Age:</label>
-		<input type="number" id="age" name="age"><br><br>
-		<label for="time">Time:</label>
-		<input type="time" id="time" name="time"><br><br>
-		<button type="button" onclick="addToQueue()">Add to queue</button>
-	</form>
-	<h2>Queues:</h2>
-	<div id="queues"></div>
-</body>
+  <head>
+    <title>Queue Management System</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+   </div>
+   <div id="main-card">
+    <script src="script.js"></script>
+    <h1>Queue Management System</h1>
+    <label for="customerName">Customer Name:</label>
+    <input type="text" id="customerName"><br><br>
+    <label for="customerAge">Customer Age:</label>
+    <input type="number" id="customerAge"><br><br>
+    <label for="estimatedTime">Estimated Time to be Served (in minutes):</label>
+    <input type="number" id="estimatedTime"><br><br>
+    <button onclick="addCustomer()">Add Customer to Queue</button>
+    <button onclick="displayQueue()">Display Queue</button>
+    <br><br>
+    <p>Customers in Queue:</p>
+    <ul id="queueList">
+    </ul>
+  </div>
+  </body>
 </html>
